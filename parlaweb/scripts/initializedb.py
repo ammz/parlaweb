@@ -15,7 +15,7 @@ from ..models import (
     get_session_factory,
     get_tm_session,
     )
-from ..models import MyModel
+from ..models import Legislatura, Consejeria, Etiqueta, Intervencion
 
 
 def usage(argv):
@@ -41,5 +41,38 @@ def main(argv=sys.argv):
     with transaction.manager:
         dbsession = get_tm_session(session_factory, transaction.manager)
 
-        model = MyModel(name='one', value=1)
-        dbsession.add(model)
+        leg = Legislatura(
+            cod=1,
+            periodo='2011-2012')
+        dbsession.add(leg)
+
+        consej = Consejeria(
+            nombre='Presidencia',
+            legislatura=leg)
+        dbsession.add(consej)
+
+        etiq_sev = Etiqueta(
+            nombre='Sevilla')
+        dbsession.add(etiq_sev)
+        
+        etiq_cor = Etiqueta(
+            nombre='Cordoba')
+        dbsession.add(etiq_cor)
+
+        interv = Intervencion(
+            nombre='nombre de la intervención',
+            fecha='1963-09-01',
+            pagina=1,
+            referencia=1,
+            comision_pleno='C',
+            nombre_comision='Comision de presidencia',
+            sesion=1,
+            tipo='C',
+            interviniente='Consejero de Presidencia',
+            consejeria=consej,
+        )
+        dbsession.add(interv)
+
+        interv.etiquetas.append(Etiqueta(nombre='Malaga'))
+
+
