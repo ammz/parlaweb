@@ -33,12 +33,20 @@ def selector_view(request):
 def intervenciones_view(request):
     """Presenta la lista de intervenciones.
     """
-    datos_intervenciones = request.dbsession.query(
+    q_intervenciones_todas = request.dbsession.query(
         Intervencion,
         func.string_agg(Etiqueta.nombre,';')
         ).outerjoin(
             Intervencion.etiquetas
-        ).order_by(Intervencion.id.desc()).group_by(Intervencion.id).all()
+        ).group_by(Intervencion.id).order_by(Intervencion.fecha.desc()).all()
+
+    q_intervenciones_sin_etiquetas = request.dbsession.query(
+        Intervencion,
+        func.string_agg(Etiqueta.nombre,';')
+        ).outerjoin(
+            Intervencion.etiquetas
+        ).filter(Intervencion.etiquetas == None
+        ).group_by(Intervencion.id).order_by(Intervencion.fecha.desc()).all()
 
     build_cadena = lambda s: '' if s is None else str(s)
 
@@ -49,10 +57,20 @@ def intervenciones_view(request):
         lista_etiquetas=set(build_cadena(etiquetas).split(";"))-set(provincias),
         lista_provincias=set(build_cadena(etiquetas).split(";")).intersection(set(provincias)),
         enlace="%s%s#page=%s" % (link, intervencion.referencia, intervencion.pagina),
-    ) for intervencion, etiquetas in datos_intervenciones]
+    ) for intervencion, etiquetas in q_intervenciones_todas]
+
+    intervenciones_sin_etiquetas = [dict(
+        id=intervencion.id,
+        fecha=intervencion.fecha.strftime('%d/%m/%Y'),
+        nombre=intervencion.nombre,
+        lista_etiquetas=set(build_cadena(etiquetas).split(";"))-set(provincias),
+        lista_provincias=set(build_cadena(etiquetas).split(";")).intersection(set(provincias)),
+        enlace="%s%s#page=%s" % (link, intervencion.referencia, intervencion.pagina),
+    ) for intervencion, etiquetas in q_intervenciones_sin_etiquetas]
 
     return {
         'intervenciones': intervenciones_todas,
+        'intervenciones_sin_etiquetas': intervenciones_sin_etiquetas,
         'section': 'intervenciones',
     }
 
