@@ -42,8 +42,8 @@ def main(argv=sys.argv):
         dbsession = get_tm_session(session_factory, transaction.manager)
 
         leg = Legislatura(
-            cod=1,
-            periodo='2011-2012')
+            cod=10,
+            periodo='2015-...')
         dbsession.add(leg)
 
         consej = Consejeria(
