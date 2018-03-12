@@ -14,7 +14,9 @@ from .meta import Base
 etiquetas_intervenciones = Table(
     'etiquetas_intervenciones', Base.metadata,
     Column('etiquetas_id', ForeignKey('etiquetas.id'), primary_key=True),
-    Column('intervenciones_id', ForeignKey('intervenciones.id'), primary_key=True),
+    Column('intervenciones_id',
+           ForeignKey('intervenciones.id'),
+           primary_key=True),
 )
 
 
@@ -66,4 +68,3 @@ class Etiqueta(Base):
         secondary=etiquetas_intervenciones,
         back_populates='etiquetas',
     )
-
