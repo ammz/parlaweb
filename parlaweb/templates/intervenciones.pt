@@ -6,31 +6,43 @@
 	    <div class="col-md-12">
 		<div tal:condition="intervenciones" id="tabla-intervenciones">
 		    <table id="t_intervenciones" class="table table-striped table-hover">
+                        <tr class="hide">
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <div><tal:form replace="structure form" /></div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
 			<tr>
 			    <th>id</th>
 			    <th>Fecha</th>
 			    <th>Intervención</th>
 			    <th colspan="2">Acciones</th>
 			</tr>
-
 			<tr tal:repeat="i intervenciones">
 			    <td tal:content="i.id"></td>
 			    <td tal:content="i.fecha"></td>
 			    <td>
 				<span class="anchor" id="${i.id}"></span>
+
 				<a tal:content="i.nombre" href="${i.enlace}" target="_blank"></a>
 				<span tal:repeat="etiq i.lista_etiquetas">
 				    <button tal:condition="etiq" type="button" class="btn btn-info btn-xs">${etiq}
 				    </button>
 				</span>
+
 				<span tal:repeat="etiq i.lista_provincias">
 				    <button tal:condition="etiq" type="button" class="btn btn-warning btn-xs">${etiq}
 				    </button>
 				</span>
+                                
+                                <div class="form ${i.id}"></div>
 
 			    </td>
 			    <td>
-				<a href="../intervenciones/${i.id}"><button type="button" class="btn btn-warning btn-default btn-xs">Editar</button></a>
+				<a id="${i.id}" class="editar" href="../intervenciones/${i.id}"><button type="button" class="btn btn-warning btn-default btn-xs">Editar</button></a>
 			    </td>
 			    <td>
 				<a href="../delete_interv/${i.id}"><button type="button" class="btn btn-danger btn-default btn-xs">Borrar</button></a>
@@ -43,4 +55,17 @@
 
     </metal:slot>
 
+
+
+    <metal:extrajs fill-slot="js">
+
+        <script type="text/javascript" src="${request.static_url('parlaweb:static/js/form.js')}"></script>
+        <script type="text/javascript">deform.load()</script>
+    
+    </metal:extrajs>
+
+
 </metal:master>
+
+
+
