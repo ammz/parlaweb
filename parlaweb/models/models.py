@@ -8,10 +8,12 @@ from .meta import Base
 
 etiquetas_intervenciones = Table(
     'etiquetas_intervenciones', Base.metadata,
-    Column('etiquetas_id', primary_key=True,
-           ForeignKey('etiquetas.id')),
-    Column('intervenciones_id', primary_key=True
-           ForeignKey('intervenciones.id')),
+    Column('etiquetas_id',
+           ForeignKey('etiquetas.id'),
+           primary_key=True),
+    Column('intervenciones_id',
+           ForeignKey('intervenciones.id'),
+           primary_key=True),
 )
 
 
