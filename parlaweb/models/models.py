@@ -1,11 +1,6 @@
 from sqlalchemy import (
-    Column,
-    Integer,
-    Text,
-    ForeignKey,
-    Table,
-    String,
-    Date,
+    Column, Integer, Text, ForeignKey,
+    Table, String, Date,
 )
 from sqlalchemy.orm import relationship
 from .meta import Base
@@ -13,10 +8,10 @@ from .meta import Base
 
 etiquetas_intervenciones = Table(
     'etiquetas_intervenciones', Base.metadata,
-    Column('etiquetas_id', ForeignKey('etiquetas.id'), primary_key=True),
-    Column('intervenciones_id',
-           ForeignKey('intervenciones.id'),
-           primary_key=True),
+    Column('etiquetas_id', primary_key=True,
+           ForeignKey('etiquetas.id')),
+    Column('intervenciones_id', primary_key=True
+           ForeignKey('intervenciones.id')),
 )
 
 
@@ -30,9 +25,10 @@ class Consejeria(Base):
     __tablename__ = 'consejerias'
     id = Column(Integer, primary_key=True)
     nombre = Column(Text)
-
     legislatura_id = Column(ForeignKey('legislaturas.cod'), nullable=False)
-    legislatura = relationship('Legislatura', backref='consejerias_de_legislatura')
+
+    legislatura = relationship('Legislatura',
+                               backref='consejerias_de_legislatura')
 
 
 class Intervencion(Base):
@@ -47,10 +43,11 @@ class Intervencion(Base):
     sesion = Column(Integer)
     tipo = Column(Text)
     interviniente = Column(Text)
+    consejeria_id = Column(Integer,
+                           ForeignKey('consejerias.id'), nullable=True)
 
-    consejeria_id = Column(Integer, ForeignKey('consejerias.id'), nullable=True)
-    consejeria = relationship('Consejeria', backref='intervenciones_de_consejeria')
-
+    consejeria = relationship('Consejeria',
+                              backref='intervenciones_de_consejeria')
     etiquetas = relationship(
         'Etiqueta',
         secondary=etiquetas_intervenciones,
